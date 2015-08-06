@@ -9,13 +9,13 @@ highlighter: pygments
 
 paginate: 20
 baseurl: /
-domain_name: 'http://mitchel.me/'
+domain_name: 'http://mitchel.me'
 google_analytics: 'UA-XXXXXXXX-X'
 disqus: false
 disqus_shortname: 'your-disqus-shortname'
 
 # Details for the RSS feed generator
-url:            'http://mitchel.me/'
+url:            'http://mitchel.me'
 author:         'Mitchel Cabuloy'
 authorTwitter:  'mixxorz'
 
