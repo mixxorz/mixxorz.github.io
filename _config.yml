@@ -2,7 +2,7 @@ name: Ramblings of a Dev
 description: Blogging about code stuff
 meta_description: "Ramblings of a Dev, Blogging about code stuff"
 
-aboutPage: true
+aboutPage: false
 
 markdown: redcarpet
 highlighter: pygments
