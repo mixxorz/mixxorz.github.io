@@ -10,7 +10,7 @@ highlighter: pygments
 paginate: 20
 baseurl: /
 domain_name: 'http://mitchel.me'
-google_analytics: 'UA-XXXXXXXX-X'
+google_analytics: 'UA-51952407-2'
 disqus: false
 disqus_shortname: 'your-disqus-shortname'
 
