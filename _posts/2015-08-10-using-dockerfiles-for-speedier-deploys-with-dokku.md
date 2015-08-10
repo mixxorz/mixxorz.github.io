@@ -1,7 +1,7 @@
 ---
-title:  "Using Dockerfiles for speedier deploys with Dokku"
+title: "Using Dockerfiles for speedier deploys with Dokku"
 description: Deploys faster than you can open twitter
-#date: To be added
+date: 2015-08-10 13:13:00
 ---
 
 We've been using Dokku for close to 6 months now, mainly for development, staging, and low traffic production apps. It gives us the flexibility of hosting on our own VPS with the ease of git-push based deploys. Recently, we've moved from using Heroku style buildpacks to Dockerfile based deploys. Because it's awesome.
