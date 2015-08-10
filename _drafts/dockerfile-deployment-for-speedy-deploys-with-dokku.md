@@ -1,6 +1,6 @@
 ---
-title:  "Dockerfile deployment for speedy deploys with Dokku"
-description: Using Dockerfile based deployments with Dokku
+title:  "Using Dockerfiles for speedier deploys with Dokku"
+description: Deploys faster than you can open twitter
 #date: To be added
 ---
 
