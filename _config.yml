@@ -5,7 +5,7 @@ meta_description: "Ramblings of a Code Author, This blog used to be about progra
 aboutPage: false
 
 markdown: kramdown
-highlighter: rogue
+highlighter: rouge
 
 paginate: 20
 baseurl: /
