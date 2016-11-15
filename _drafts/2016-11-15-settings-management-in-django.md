@@ -16,7 +16,7 @@ I eventually came across a library called [`django-environ`](https://github.com/
 
 We'll setup `django-environ` in our `settings.py` file.
 
-```python
+~~~ python
 # ./myapp/settings.py
 
 import os
@@ -33,15 +33,15 @@ env = environ.Env(
     DATABASE_URL=str,
 )
 
-```
+~~~
 
 What we're doing here is defining which variables `django-environ` should look for, set their type, and optionally set a default value.
 
 > You might be wondering what `DATABASE_URL` is. It's basically a string that holds all the information required to connect to a database. Its type (Postgres, MySQL, sqlite), username, password, hostname, port, and database name. Here's an example:
 >
-> ```bash
+> ~~~ bash
 > postgres://user:password@host:5432/mydb
-> ```
+> ~~~
 >
 > You don't have to use it, but it's becoming a common convention these days. It's also really convenient since you don't have to specify each parameter separately.
 
@@ -49,32 +49,32 @@ What we're doing here is defining which variables `django-environ` should look f
 
 Let's add a `.env` file to our project root.
 
-```bash
+~~~ bash
 # ./.env
 
 SECRET_KEY=not-so-secret
 DEBUG=True
 DATABASE_URL=postgres://postgres:password@localhost:5432/myapp
-```
+~~~
 
 We can then load this file in `settings.py` like so:
 
-```python
+~~~ python
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-```
+~~~
 
 The variables found in `.env` will override the system environment variables.
 
 Now, to actually use these variables, we'll just use `env()`.
 
-```python
+~~~ python
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 DATABASES = {
   'default': env.db(),
 }
-```
+~~~
 
 `env()` will return the value for the given key, or if its not set, the default I specified earlier on. If no value is found and there's no default value, `django-environ` will raise an exception.
 

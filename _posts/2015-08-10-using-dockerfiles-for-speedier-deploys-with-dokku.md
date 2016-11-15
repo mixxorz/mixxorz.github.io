@@ -34,34 +34,35 @@ Here's how to deploy it on your own Dokku server:
 
 First, clone the repo:
 
-```bash
+~~~ bash
 $ git clone https://github.com/mixxorz/dokku-django-gulp
 $ cd dokku-django-gulp
-```
+~~~
+
 
 Create the dokku app:
 
-```bash
+~~~ bash
 $ dokku apps:create dokku-django-gulp
-```
+~~~
 
 Set the required environment variables:
 
-```bash
+~~~ bash
 $ dokku config:set SECRET_KEY=your-secret-key \
    ALLOWED_HOSTS=dokku-django-gulp.yourdomain.com \
    DATABASE_URL=sqlite://db.sqlite3
-```
+~~~
 
 Add the remote:
 
-```bash
+~~~ bash
 $ git remote add dokku dokku@yourdomain.com:dokku-django-gulp
-```
+~~~
 
 Git push!
 
-```bash
+~~~ bash
 $ git push dokku master
 Counting objects: 93, done.
 Delta compression using up to 4 threads.
@@ -81,7 +82,7 @@ Total 93 (delta 38), reused 0 (delta 0)
 
 To dokku@yourdomain.com:dokku-django-gulp
    682d568..9f906ab  master -> master
-```
+~~~
 
 Your initial push might take a little while. This is because it has to download all the necessary files for the first time. In successive builds however, [Docker caching] will kick in and you'll have sub-minute build times!
 
