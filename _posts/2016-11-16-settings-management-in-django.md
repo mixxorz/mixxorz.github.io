@@ -1,7 +1,7 @@
 ---
 title:  "Settings management in Django"
 date:   2016-11-16 9:15:00
-description: Simple configuration management with django-environ
+description: A clean and simple approach to settings management for Django using django-environ
 ---
 
 Django has a pretty good system in place for handling configuration: the settings file. It's the one place you go to set configuration variables for your app. There are a couple of common scenarios however that the settings file doesn't handle super well. Namely sensitive settings and different environments (dev, prod, staging).
