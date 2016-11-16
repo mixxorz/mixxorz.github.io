@@ -1,6 +1,6 @@
 ---
 title:  "Settings management in Django"
-date:   2016-11-15 23:43:00
+date:   2016-11-16 9:15:00
 description: Simple configuration management with django-environ
 ---
 
