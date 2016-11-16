@@ -14,7 +14,7 @@ There have been some approaches that handle these scenarios in the past. For exa
 
 I eventually came across a library called [`django-environ`](https://github.com/joke2k/django-environ), and it made configuration management much simpler. What it does is simple, it makes it easy to load environment variables from the system while also allowing us to load configuration variables from a file. Let's see how it works.
 
-We'll setup `django-environ` in our `settings.py` file.
+We'll set up `django-environ` in our `settings.py` file.
 
 ~~~ python
 # ./myapp/settings.py
@@ -43,9 +43,9 @@ What we're doing here is defining which variables `django-environ` should look f
 > postgres://user:password@host:5432/mydb
 > ~~~
 >
-> You don't have to use it, but it's becoming a common convention these days. It's also really convenient since you don't have to specify each parameter separately.
+> You don't have to use it, but it's becoming a common convention these days. It's really convenient that the database parameters don't need to be declared separately.
 
-`django-environ` primarily gets the configuration from the current environment, but you can also make it load variables from a file (usually named `.env`). We'll make sure to add `.env` to our `.gitignore` as to not commit it to our repo. This is important since `.env` will usually hold sensitive settings, as well as environment specific settings.
+`django-environ` primarily gets the configuration from the current environment, but we can also make it load variables from a file (usually named `.env`). We'll make sure to add `.env` to our `.gitignore` as to not commit it to our repo. This is important since `.env` will usually hold sensitive settings, as well as environment specific settings.
 
 Let's add a `.env` file to our project root.
 
@@ -65,7 +65,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 The variables found in `.env` will override the system environment variables.
 
-Now, to actually use these variables, we'll just use `env()`.
+Now, to actually use these variables, we'll just use the `env` variable that we
+declared earlier.
 
 ~~~ python
 SECRET_KEY = env('SECRET_KEY')
@@ -76,11 +77,11 @@ DATABASES = {
 }
 ~~~
 
-`env()` will return the value for the given key, or if its not set, the default I specified earlier on. If no value is found and there's no default value, `django-environ` will raise an exception.
+`env()` will return the value for the given key, or if its not set, the default we specified earlier on. If no value is found and there's no default value, `django-environ` will raise an exception.
 
-> If you've set `DATBASE_URL`, `django-environ`  can automatically parse and convert it into a database configuration dictionary ready to be used by Django.
+> If `DATBASE_URL` is set, `django-environ`  can automatically parse and convert it into a database configuration dictionary ready to be used by Django.
 
-Simple stuff, but this actually solves both of our issues. Sensitive settings are still set in environment variables, but you can conveniently override them in the `.env` file during local development. And to make your app run in different environments, you only need to set the appropriate settings in the `.env` file.
+Simple stuff, but this actually solves both of our issues. Sensitive settings are still set in environment variables, but we can conveniently override them in the `.env` file during local development. And to make our app run in different environments, we only need to set the appropriate settings in the `.env` file.
 
 Real cool.
 
