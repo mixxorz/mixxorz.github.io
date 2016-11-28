@@ -1,6 +1,6 @@
 ---
 title:  Consolidating your dev processes with honcho
-date:   2016-11-27 13:50:00
+date:   2016-11-28 13:40:00
 description: Do away with multiple terminal sessions
 ---
 
