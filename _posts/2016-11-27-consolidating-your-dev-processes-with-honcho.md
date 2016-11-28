@@ -1,14 +1,15 @@
 ---
-title:  Manage your dev processes with honcho
-date:   2016-11-26 9:15:00
-description: All your processes in one!
+title:  Consolidating your dev processes with honcho
+date:   2016-11-27 13:50:00
+description: Do away with multiple terminal sessions
 ---
 
 Front-end build tools like gulp, grunt, or webpack are awesome (or a necessary evil depending on who you ask). Using them can make you a much more productive web developer. In my projects for example, I always use gulp with BrowserSync so that whenever I make a change in one of my Sass files, it automatically compiles and injects it onto the webpage. No refreshing required. (You can learn how to do that [here](https://www.browsersync.io/docs/gulp#gulp-sass-css).)
 
 That's super amazing. But there's one thing that annoyed me about using these tools; I have to open a new session in my terminal to run it.
 
-gulp needs to be continuously running for it to automatically work on your files when it detects changes.  This is such a minor annoyance that I just kind of dealt with it for a while.
+I mainly use Django for my web projects, which means I'll need to have Django's
+dev server running alongside gulp, which also needs to be continuously running for it to automatically work on your files when it detects changes. In practice, I'll need to have two terminals: one for Django and one for gulp. This is a very minor annoyance and for a while, I just dealt with it.
 
 One day I stumbled upon [honcho](https://honcho.readthedocs.io/en/latest/). It's a command-line tool that lets you manage [Procfile-based applications](https://devcenter.heroku.com/articles/procfile). You create a file named `Procfile` where you specify the processes your app needs to run, and honcho takes care of spawning them. Here's an example from one of the projects I worked on:
 
@@ -36,7 +37,7 @@ web: python manage.py runserver  # Django's dev server
 gulp: gulp watch
 ~~~
 
-Now I can spawn these two processes at the same time with `honcho -f Procfile.dev start`
+Now we can spawn these two processes at the same time with `honcho -f Procfile.dev start`
 
 ~~~shell_session
 $ honcho -f Procfile.dev start
@@ -65,9 +66,7 @@ $ honcho -f Procfile.dev start
 21:32:55 gulp.1 |  --------------------------------------
 ~~~
 
-
-
-The terminal output is prefixed too so you know which process it came from.
+The terminal output is prefixed too so we know which process it came from.
 
 ## Language agnostic
 
