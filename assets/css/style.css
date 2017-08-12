@@ -127,7 +127,7 @@ h2 {
 
 .profile #wrapper {
   padding: 100px 40px 0px;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
@@ -166,7 +166,7 @@ h2 {
 nav.main-nav {
   padding: 20px 20px 0;
 
-  /*max-width: 600px;*/
+  /*max-width: 640px;*/
   /*width:100%;*/
   background: #fff;
   background: rgba(255, 255, 255, 0.9);
@@ -196,13 +196,13 @@ nav.main-nav a.cta {
 }
 
 #wrapper {
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 60px 40px 100px 40px;
 }
 
 #wrapper.home {
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 0px 40px 20px 40px;
 }
@@ -241,8 +241,10 @@ a,
   transition: all 0.15s ease;
 }
 
-ul {
+ul,
+ol {
   margin: 0;
+  margin-bottom: 20px;
   padding: 0;
 }
 
@@ -297,13 +299,13 @@ em, i {
 }
 
 .post h1 {
-  margin-bottom: 2 0px;
+  margin-bottom: 2px;
   color: #222;
   font: 300 32px/1.4em "Helvetica Neue", Helvetica,Arial,sans-serif;
 }
 
 .post h2 {
-  margin-bottom: 40px;
+  margin-bottom: 4px;
   font: 300 24px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif;
   color: #111;
 }
@@ -319,6 +321,10 @@ em, i {
 
   /*margin-top: 15px;*/
   display: inline-block;
+}
+
+.post h3 {
+  margin-bottom: 10px;
 }
 
 #post-list h2 {
@@ -381,7 +387,6 @@ span.code, code {
 
 pre {
   font-family: Menlo, Monaco, Courier;
-  white-space: pre-wrap;
 
   /*border: 1px solid #ddd;*/
   padding: 20px;
