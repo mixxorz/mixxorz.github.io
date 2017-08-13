@@ -313,4 +313,6 @@ Projects get complicated fast, and just putting your business logic in views and
 
 For now I'll leave you with [a gist](https://gist.github.com/mixxorz/367df56cde603bd31e12c809b7e2217a) with everything you need, but I'm planning to release a library soon so you can just `import Service`.
 
+UPDATE: [Here's the library version!](https://github.com/mixxorz/django-service-objects)
+
 🍻
