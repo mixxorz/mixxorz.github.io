@@ -245,12 +245,7 @@ ul,
 ol {
   margin: 0;
   margin-bottom: 20px;
-  padding: 0;
-}
-
-li {
-  list-style-type: circle;
-  list-style-position: inside;
+  padding-left: 20px;
 }
 
 /* Line Height */
