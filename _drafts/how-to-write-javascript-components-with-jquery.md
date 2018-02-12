@@ -3,8 +3,6 @@ title: "Writing JavaScript components with jQuery"
 description: jQuery is OK
 ---
 
-[insert link to code and example for the impatient]
-
 I know I know. “jQuery? That’s sooo 2013…” But actually, there are lots of reasons why you might want to use jQuery over other frameworks. Here are some of mine:
 
 * You don’t want to use React/Vue/Angular because it’s overkill for what you want to do
@@ -21,19 +19,19 @@ So first thing’s first, let’s start with the assumptions.
 * You’re using Webpack/Browserify or something similar to compile your JS
 * You’re using npm based libraries
 
-If you’re not familiar with the technologies I just listed, then I suggest you first read up on modern JavaScript. It might be painful at first, but trust me it’s totally worth it. Modern JavaScript is _really_ good. It’s what allowed me to write maintainable jQuery code with little fuss. Here are a few resources to get you started. [INSERT LINK TO RESOURCES HERE]
+If you’re not familiar with the technologies I just listed, then I suggest you first read up on modern JavaScript. It might be painful at first, but trust me it’s totally worth it. Modern JavaScript is _really_ good. It’s what allowed me to write maintainable jQuery code with little fuss. Here are a few resources to get you started.
+
+* [Introduction to commonly used ES6 features](https://zellwk.com/blog/es6/)
+* [http://es6-features.org](http://es6-features.org)
 
 ## Think Components™️
-It’s generally a good idea to think of your interface in terms of components.
-
-[Illustration of components here. Probably an illustration, not a screenshot]
-
 For this blog post, I’m going to define a component as a **user interface element that only cares about itself**. Any code you write should only affect the component’s internals, and the component should be able to function independently. The only way for a component to affect and be affected by externalities is through event handlers and public methods.
 
 ## Enough about theory. Let’s write some code.
 
-[![:(](/assets/images/writing-javascript-components-with-jquery/carousel-screenshot.png ":(")](/assets/images/writing-javascript-components-with-jquery/carousel-screenshot.png)
+![:(](/assets/images/writing-javascript-components-with-jquery/carousel-screenshot.png ":(")
 
+<a href="/assets/demos/javascript-components" target="_blank">Open demo</a> \| <a href="https://gist.github.com/mixxorz/fc73019330ba023b84a3b79bc429a562" target="_blank">Full source code</a>
 
 We’re going to build a carousel! Basic stuff. We have some arrows that navigate the slides. Also we have those dot things.
 
@@ -159,7 +157,7 @@ console.log(slider.slideTo(1)) // Slides to the second slide
 Awesome right? We wrote all that code so that we can control the slider without having to call any low-level jQuery methods.
 
 ## CarouselDots.js
-Here’s the code for the dots.
+We’re doing something special in this component. We want to be able to click on a dot and for the slider to slide to that dot’s slide.
 
 ```javascript
 import $ from 'jquery'
@@ -193,8 +191,6 @@ class CarouselDots extends EventEmitter {
 export default CarouselDots
 ```
 
-We’re doing something special in this component. We want to be able to click on a dot and for the slider to slide to that dot’s slide.
-
 We’re used to being able to use the `on` method with jQuery objects to listen to click/change/etc. events, but did you know that we can also fire our own custom events? That’s what `EventEmitter` is for. We extend `CarouselDots` from `EventEmitter` so that we can attach event listeners to the `CarouselDots` instance.
 
 Here’s how that’s used:
@@ -204,11 +200,16 @@ const dots = new CarouselDots({root: '.carousel-dots'})
 dots.on('clickdot', index => console.log(`Clicked dot ${index}`))
 ```
 
-We set the `clickdot` event to be fired in the `_handleClick` method. `_handleClick` is called when one of our dots is clicked. We figure out which dot triggered the event, and emit the `clickdot` event with `this.emit('clickdot', index)`. All the listeners will then be called, passing in the `index`. Events is the glue that ties all our components together.
+We set the `clickdot` event to be fired in the `_handleClick` method. `_handleClick` is called when one of our dots is clicked. We figure out which dot triggered the event, and emit the `clickdot` event with `this.emit('clickdot', index)`. All the listeners will then be called, passing in the `index`.
+
+**Emitting and handling events is what ties all our components together.**
 
 There’s another method on `CarouselDots` called `highlightDot`. It does what it says on the tin: you pass in an index and it’ll highlight that dot.
 
+> In this example, we're using [eventemitter3](https://www.npmjs.com/package/eventemitter3) as our event emitter library. Node has it's own built-in event emitter, but I like eventemitter3 because it's optimized to work in the browser.
+
 ## CarouselControls.js
+
 ```javascript
 import $ from 'jquery'
 import EventEmitter from 'eventemitter3'
@@ -327,9 +328,11 @@ const carousel1 = new CarouselBlock({root: '#carousel1'})
 const carousel2 = new CarouselBlock({root: '#carousel2'})
 ```
 
-## So that’s it
-Hope you learned something new today.
+So that's it, pretty much.
 
-// TODO: Talk about Vanilla.js, Zepto.js, whatever
+## Do I really need jQuery?
 
-#blog
+Not really. If you can do with something lighter like Zepto.js, or even just Vanilla javascript, then that's your call. What makes this approach great isn't really jQuery, but the independent structure of each component, communicating only through public methods and event listeners.
+
+Now go forth and write better javascript! 🍻
+
