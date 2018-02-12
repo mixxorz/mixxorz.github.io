@@ -1,5 +1,6 @@
 ---
 title: "Writing JavaScript components with jQuery"
+date: 2018-02-12 12:20:00 +8
 description: jQuery is OK
 ---
 
