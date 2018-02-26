@@ -34,7 +34,7 @@ from .notifications import VerifyEmailNotification
 from some_project.services import Service
 
 
-class CreateBookingService(Service):
+class CreateBooking(Service):
     name = forms.CharField()
     email = forms.EmailField()
     checkin_date = forms.DateField()
@@ -70,7 +70,7 @@ class CreateBookingService(Service):
 
 Service objects inherit from `Service` (implementation below) and it has a similar API to Django Forms. That's because Service actually inherits from `forms.Form`. The only difference you have to implement a `process` method where you put your business logic.
 
-Here I wrote a `CreateBookingService` that does three things.
+Here I wrote `CreateBooking` service that does three things.
 
 1. Updates or creates a `Customer`
 2. Creates a `Booking`
@@ -83,9 +83,9 @@ Just call `execute` on the class, passing in a `dict` of parameters, just like F
 ```python
 from datetime import date
 
-from apps.booking.services import CreateBookingService
+from apps.booking.services import CreateBooking
 
-booking = CreateBookingService.execute({
+booking = CreateBooking.execute({
     'name': 'Mitchel Cabuloy',
     'email': 'mixxorz@gmail.com',
     'checkin_date': date(2017, 8, 12),
@@ -150,7 +150,7 @@ Cool right? There's more.
 Let's say there are some instances where email verification isn't required so we want to disable it. You do it like this:
 
 ```python
-class CreateBookingService(Service):
+class CreateBooking(Service):
     # ...fields
 
     def __init__(self, *args, require_verification=True):
@@ -172,7 +172,7 @@ class CreateBookingService(Service):
 We just added a `require_verification` keyword argument to the constructor. And here's how to use it:
 
 ```python
-booking = CreateBookingService.execute({
+booking = CreateBooking.execute({
     'name': 'Mitchel Cabuloy',
     'email': 'mixxorz@gmail.com',
     'checkin_date': date(2017, 8, 12),
@@ -211,7 +211,7 @@ Since service objects are built on top of Forms, there are a couple of quirky th
 You can't just pass in a model instance. Instead of you have to pass in the ID.
 
 ```python
-class ApproveBookingService(Service):
+class ApproveBooking(Service):
     booking = forms.ModelChoiceField(
         queryset=Booking.objects.all())
 
@@ -227,7 +227,7 @@ class ApproveBookingService(Service):
 some_booking = Booking.objects.get()
 
 # Pass in 'some_booking.pk'
-ApproveBookingService.execute({
+ApproveBooking.execute({
     'booking': some_booking.pk
 })
 ```
@@ -279,7 +279,7 @@ class PersonForm(forms.Form):
     name = forms.CharField()
 
 
-class UpdateOrganizationService(Service):
+class UpdateOrganization(Service):
     organization = forms.ModelChoiceField(
         queryset=Organization.objects.all())
     people = MultipleFormField(PersonForm)
@@ -297,7 +297,7 @@ class UpdateOrganizationService(Service):
 
 
 org = Organization.objects.get()
-UpdateOrganizationService.execute({
+UpdateOrganization.execute({
     'organization': org,
     'people': [{
         'name': 'Mitchel Cabuloy',
