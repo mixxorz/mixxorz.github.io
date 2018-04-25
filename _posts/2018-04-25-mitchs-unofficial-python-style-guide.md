@@ -4,7 +4,7 @@ date: 2018-04-25 10:00:00 +8
 description: A Python style guide that doesn't make you think
 ---
 
-[TL;DR.](https://github.com/mixxorz/python)
+TL;DR. [Here's style guide](https://github.com/mixxorz/python).
 
 PEP 8 does a very good job of being the definitive coding style guide for
 Python. It details a lot of rules that steer programmers to write code that’s
