@@ -1,5 +1,5 @@
 ---
-title: "TIL: Straightforward parallelization with Python 3"
+title: "TIL: Effortless parallelization with Python 3"
 date: 2018-09-21 10:00:00 +8
 description: Run things in multiple threads
 ---
