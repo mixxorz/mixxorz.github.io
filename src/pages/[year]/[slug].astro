@@ -1,0 +1,176 @@
+---
+import { getCollection, render } from "astro:content";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+import {
+  formatDate,
+  getAdjacent,
+  postHref,
+  readingLabel,
+  visiblePosts,
+  type Post,
+} from "@/lib/posts";
+
+export async function getStaticPaths() {
+  const allPosts = visiblePosts(await getCollection("posts"));
+
+  return allPosts.map((post) => {
+    const [year, slug, ...rest] = post.id.split("/");
+    if (!year || !slug || rest.length > 0) {
+      throw new Error(`Post ${post.id} must use the content path <year>/<slug>.md`);
+    }
+
+    return {
+      params: { year, slug },
+      props: { post, allPosts },
+    };
+  });
+}
+
+interface Props {
+  post: Post;
+  allPosts: Post[];
+}
+
+const { post, allPosts } = Astro.props;
+const { Content } = await render(post);
+const data = post.data;
+const { newer, older } = getAdjacent(allPosts, post);
+const articleUrl = new URL(postHref(post), siteConfig.siteUrl).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: data.title,
+  description: data.excerpt,
+  image: new URL(siteConfig.socialImage, siteConfig.siteUrl).toString(),
+  datePublished: data.date.toISOString(),
+  dateModified: (data.updatedDate ?? data.date).toISOString(),
+  author: { "@type": "Person", name: siteConfig.authorName },
+  publisher: { "@type": "Person", name: siteConfig.authorName },
+  mainEntityOfPage: articleUrl,
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.excerpt}
+  type="article"
+  structuredData={structuredData}
+>
+  <SiteHeader />
+  <main id="content" class="outer">
+    <article>
+      <header class="canvas pt-10 md:pt-14">
+        <p class="meta post-meta">
+          <span class="meta-accent">
+            <time datetime={data.date.toISOString()}>{formatDate(data.date, "long")}</time>
+          </span>
+          <span>{readingLabel(post)}</span>
+        </p>
+
+        <h1 class="article-title">{data.title}</h1>
+        <p class="article-excerpt">{data.excerpt}</p>
+
+        {data.updatedDate && (
+          <p class="meta mt-5">
+            <span>Updated <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time></span>
+          </p>
+        )}
+      </header>
+
+      <div class="prose canvas mt-12">
+        <Content />
+      </div>
+
+      {(newer || older) && (
+        <footer class="canvas mt-16 border-t border-border pt-8">
+          <nav class="grid gap-8 sm:grid-cols-2" aria-label="Post navigation">
+            <div>
+              {older && (
+                <a href={postHref(older)} class="link-title link-nudge">
+                  <span class="eyebrow">
+                    <span class="link-nudge__arrow link-nudge__arrow--prev">&larr;</span> Previous
+                  </span>
+                  <span class="link-title__text mt-2 block font-semibold leading-snug">{older.data.title}</span>
+                </a>
+              )}
+            </div>
+            <div class="sm:text-right">
+              {newer && (
+                <a href={postHref(newer)} class="link-title link-nudge">
+                  <span class="eyebrow">
+                    Next <span class="link-nudge__arrow link-nudge__arrow--next">&rarr;</span>
+                  </span>
+                  <span class="link-title__text mt-2 block font-semibold leading-snug">{newer.data.title}</span>
+                </a>
+              )}
+            </div>
+          </nav>
+        </footer>
+      )}
+    </article>
+  </main>
+  <SiteFooter />
+
+  <script is:inline>
+    document.querySelectorAll(".prose pre").forEach((pre, index) => {
+      if (pre.closest(".code-copy-frame")) return;
+
+      const code = pre.querySelector("code");
+      const frame = document.createElement("div");
+      const button = document.createElement("button");
+      const liveRegion = document.createElement("span");
+      const labelId = `code-copy-${index}`;
+
+      frame.className = "code-copy-frame";
+      button.type = "button";
+      button.className = "code-copy-button";
+      button.setAttribute("aria-describedby", labelId);
+      button.textContent = "Copy";
+      liveRegion.id = labelId;
+      liveRegion.className = "sr-only";
+      liveRegion.setAttribute("aria-live", "polite");
+
+      pre.parentNode?.insertBefore(frame, pre);
+      frame.append(pre, button, liveRegion);
+
+      button.addEventListener("click", async () => {
+        try {
+          if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+          await navigator.clipboard.writeText(code?.textContent ?? pre.textContent ?? "");
+          button.textContent = "Copied";
+          liveRegion.textContent = "Code copied";
+        } catch {
+          button.textContent = "Failed";
+          liveRegion.textContent = "Copy failed";
+        }
+        window.setTimeout(() => {
+          button.textContent = "Copy";
+        }, 1800);
+      });
+    });
+  </script>
+
+  <style>
+    .article-title {
+      margin: 1.25rem 0 0;
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 6.5vw, 4rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      text-wrap: balance;
+      word-break: break-word;
+    }
+
+    .article-excerpt {
+      margin: 1.25rem 0 0;
+      color: color-mix(in srgb, var(--foreground) 82%, transparent);
+      font-size: clamp(1.125rem, 2.4vw, 1.4rem);
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+  </style>
+</BaseLayout>

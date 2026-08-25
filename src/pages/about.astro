@@ -1,0 +1,20 @@
+---
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+---
+
+<BaseLayout title="About" description={`About ${siteConfig.authorName}.`}>
+  <SiteHeader />
+  <main id="content" class="outer">
+    <div class="canvas">
+      <header class="pagehead">
+        <p class="eyebrow">About</p>
+        <h1 class="pagehead-title">{siteConfig.authorName}</h1>
+        <p class="pagehead-description">{siteConfig.about}</p>
+      </header>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

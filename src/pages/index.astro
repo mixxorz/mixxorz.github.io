@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content";
+import PostCard from "@/components/PostCard.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+import { visiblePosts } from "@/lib/posts";
+
+const allPosts = visiblePosts(await getCollection("posts"));
+const [latest, ...rest] = allPosts;
+const feed = rest.slice(0, 8);
+const hasMore = rest.length > feed.length;
+---
+
+<BaseLayout>
+  <SiteHeader />
+  <main id="content" class="outer">
+    <div class="inner">
+      <h1 class="sr-only">{siteConfig.name} — {siteConfig.tagline}</h1>
+
+      {latest && (
+        <section class="pt-10 pb-[var(--space-section)] md:pt-14" aria-label="Latest post">
+          <PostCard post={latest} variant="lead" headingLevel="h2" dateLabel="Latest" />
+        </section>
+      )}
+
+      <div class="grid gap-[var(--space-section)] lg:grid-cols-[minmax(0,4fr)_minmax(0,2fr)] lg:gap-12">
+        <section aria-labelledby="more-posts">
+          <h2 id="more-posts" class="section-title">More posts</h2>
+
+          {feed.length > 0 ? (
+            <div class="feed">
+              {feed.map((post) => <PostCard post={post} />)}
+            </div>
+          ) : (
+            <p class="text-muted-foreground">More posts are coming soon.</p>
+          )}
+
+          {hasMore && (
+            <a href="/posts/" class="btn btn-outline btn-block mt-16">Browse the archive</a>
+          )}
+        </section>
+
+        <aside class="sidebar">
+          <section aria-labelledby="about-heading">
+            <h2 id="about-heading" class="section-title">About</h2>
+            <p class="text-lg font-semibold tracking-tight">{siteConfig.name}</p>
+            <p class="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">
+              {siteConfig.about}
+            </p>
+            <a href="/about/" class="nav-link mt-5 inline-block">More about me</a>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
+</BaseLayout>

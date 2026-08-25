@@ -1,0 +1,121 @@
+---
+import { navigation, siteConfig } from "@/config/site";
+
+const currentPath = Astro.url.pathname;
+const isCurrentPath = (href: string) =>
+  currentPath === href || (href !== "/" && currentPath.startsWith(href));
+---
+
+<header class="site-header outer">
+  <div class="inner flex items-center justify-between gap-6 py-2.5">
+    <a href="/" class="wordmark">{siteConfig.name}</a>
+
+    <div class="flex items-center gap-3">
+      <nav class="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
+        {
+          navigation.map((item) => (
+            <a
+              href={item.href}
+              class="nav-link"
+              aria-current={isCurrentPath(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <button
+        type="button"
+        class="theme-switch"
+        role="switch"
+        aria-checked="false"
+        data-theme-toggle
+        aria-label="Switch to dark mode"
+      >
+        <span class="theme-switch__knob" aria-hidden="true">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none">
+            <path d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5 5 3.5 3.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"></path>
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2.25"></circle>
+          </svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none">
+            <path d="M20 14.2A7.4 7.4 0 0 1 9.8 4a8.6 8.6 0 1 0 10.2 10.2Z" stroke="currentColor" stroke-width="2.25" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+      </button>
+
+      <details class="mobile-nav md:hidden">
+        <summary class="icon-btn" aria-label="Open navigation menu">
+          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"></path>
+          </svg>
+        </summary>
+        <nav aria-label="Mobile navigation">
+          <ul>
+            {
+              navigation.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={isCurrentPath(item.href) ? "page" : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .mobile-nav {
+    position: relative;
+  }
+
+  .mobile-nav summary {
+    list-style: none;
+  }
+
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-nav nav {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    min-width: 10rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: 0 16px 40px rgb(0 0 0 / 14%);
+  }
+
+  .mobile-nav ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mobile-nav a {
+    display: block;
+    padding: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a:focus-visible,
+  .mobile-nav a[aria-current="page"] {
+    background: var(--muted);
+    color: var(--accent);
+  }
+</style>
