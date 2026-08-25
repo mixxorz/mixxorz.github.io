@@ -29,4 +29,6 @@ Static files live in `public/`. Existing article images and demos remain under `
 
 The visual foundation is [Monograph](https://github.com/xocothemes/monograph), vendored from version 1.0.0 at commit `65f0493f5baf5726cb0f6ee7ff855c786e56e1eb` and adapted for this site. Monograph is MIT licensed; see `LICENSE`.
 
-Deployment configuration will be added separately after the local site is approved.
+## Deployment
+
+Pushes to `master` deploy through `.github/workflows/deploy.yml`. The repository's Pages source must be set to **GitHub Actions**. The workflow checks and builds the site with Node.js 24 before deploying the generated `dist/` artifact; `public/CNAME` preserves the `mitchel.me` custom domain.
