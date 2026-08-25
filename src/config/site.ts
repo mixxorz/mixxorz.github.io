@@ -10,7 +10,7 @@ export const siteConfig = {
   timeZone: "Asia/Manila",
   locale: "en_US",
   socialImage: "/assets/images/avatar@2x.png",
-  about: "My thoughts on software engineering",
+  bio: "Hello, I'm Mitch. I'm a software engineer, primarily focused on web development since 2015. I'm currently an Engineering Manager at Torchbox, helping deliver value through technology to charities and non-profits. These days, I've been focused on AI and how to best deliver software in this new era of agent driven software engineering.",
   socials: [
     { label: "X/Twitter", href: "https://twitter.com/mixxorz" },
     { label: "Instagram", href: "https://instagram.com/mixxorz" },

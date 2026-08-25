@@ -12,8 +12,12 @@ import { siteConfig } from "@/config/site";
       <header class="pagehead">
         <p class="eyebrow">About</p>
         <h1 class="pagehead-title">{siteConfig.authorName}</h1>
-        <p class="pagehead-description">{siteConfig.about}</p>
+        <p class="pagehead-description">{siteConfig.tagline}</p>
       </header>
+
+      <div class="prose">
+        <p>{siteConfig.bio}</p>
+      </div>
     </div>
   </main>
   <SiteFooter />
