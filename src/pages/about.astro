@@ -9,10 +9,19 @@ import { siteConfig } from "@/config/site";
   <SiteHeader />
   <main id="content" class="outer">
     <div class="canvas">
-      <header class="pagehead">
-        <p class="eyebrow">About</p>
-        <h1 class="pagehead-title">{siteConfig.authorName}</h1>
-        <p class="pagehead-description">{siteConfig.tagline}</p>
+      <header class="pagehead profile-header">
+        <img
+          src="/assets/images/profile-github.jpg"
+          width="460"
+          height="460"
+          alt={siteConfig.authorName}
+          class="profile-photo"
+        />
+        <div>
+          <p class="eyebrow">About</p>
+          <h1 class="pagehead-title">{siteConfig.authorName}</h1>
+          <p class="pagehead-description">{siteConfig.tagline}</p>
+        </div>
       </header>
 
       <div class="prose">
@@ -21,4 +30,26 @@ import { siteConfig } from "@/config/site";
     </div>
   </main>
   <SiteFooter />
+
+  <style>
+    .profile-header {
+      display: grid;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .profile-photo {
+      width: 8rem;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+    }
+
+    @media (min-width: 640px) {
+      .profile-header {
+        grid-template-columns: auto 1fr;
+      }
+    }
+  </style>
 </BaseLayout>
