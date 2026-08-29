@@ -5,34 +5,140 @@ excerpt: Agentic systems do not replace deterministic software.
 draft: true
 ---
 
-It's August 2026, and I think a lot of software engineers still get something deeply wrong with agentic systems: they do not replace deterministic software.
+It's August 2026, and I think a lot of software engineers still get something
+deeply wrong with agentic systems: they should not replace traditional
+deterministic software.
 
-I thought this was obvious, but perhaps some clarity will be good.
+What I mean is that new and exciting agentic approaches to software should not
+_replace_ traditional methods. Instead, they should enable us to build _new
+types_ of software.
 
-Let's say you're building a hotel booking system. In the past, what you'd have to do is to essential create a form wizard. First create a form that accepts customer information, then store than in the database. Then, in order to show available room options, write an SQL query that cross references rooms with rooms that have bookings for the period selected. The handle payments, transactional emails, and so on and so forth until you have a working booking system.
+For example, let's say you're building a hotel booking system. You'd go through
+all the basics: database models, views, forms, and UI. The works.
 
-| diagram: User -> Booking system -> Output
+At its most basic, the interaction model would kind of look like this.
 
-In the agentic we now live in, I've seen software engineers come up with this architecture instead: Get a model and give it tools like: `update_customer_information`, `run_sql_query`, `send_transactional_email`, `accept_payment`. Along with a system prompt telling the agent how the booking system should work. Then, they expose a chat interface with the customer.
+<figure>
+  <img
+    class="theme-diagram"
+    src="/assets/images/when-not-to-use-agents/traditional-booking-flow.svg"
+    alt="Traditional booking flow: a user interacts with a user interface, which calls the booking system core."
+    width="720"
+    height="180"
+  />
+</figure>
 
-This is bad on so many levels, but the main concern is that this transforms a deterministic booking system in to a sort of russian roulette. With this approach, the business logic is now entirely in the hands of a non-deterministic LLM.
+In the agentic world we now live in, I've seen software engineers propose a
+different architecture. They get a model and give it low-level tools like
+`update_customer_information`, `reserve_room`, `send_transactional_email`, etc.,
+along with a system prompt explaining how the booking system should work. Then
+they expose a chat interface to the customer.
 
-Maybe someday models will get so good, their alignment ratings so high, that we can just give them bare tools and a system prompt and get 100% reliability. But that day is not today, so don't do this.
+<figure>
+  <img
+    class="theme-diagram"
+    src="/assets/images/when-not-to-use-agents/llm-low-level-tools-flow.svg"
+    alt="Risky agentic booking flow: a user talks to an LLM, which directly orchestrates low-level tools in the booking system core."
+    width="720"
+    height="180"
+    loading="lazy"
+  />
+</figure>
 
-So what do we do instead? I see two options.
+In the chat, a customer might say, “Find me a room for two nights under 300 USD.”
+The LLM will then try its best to figure out the right course of action
+according to its system prompt and the tools it has at its disposal. It will try
+to determine the dates and budget, then choose the best room based on its own
+judgment.
 
-One, just don't use agents bro.
+If it follows the system prompt closely, it may be able to do all this
+successfully. However, it's far from guaranteed, and non-deterministic behavior
+is usually not what you want when building production systems.
 
-Agent architecture is really good if the problem you're trying to solve is undefined. Allowing the agent to think and decide for itself what the best action is really useful for exploratory workflows, like coding itself.
+Maybe someday models will get so good, so well _aligned_, that we can just give
+them bare tools, a system prompt and get 100% reliability. But that day is
+not today.
 
-But, if you need a system to work the same way every time, like how most actual software needs to function, then you're better off building with a non-agentic approach.
+So what can we do instead? Here I propose two options.
 
-The second more interesting approach, is to still use agents, but be smart about the tools that you give to it. The mindset that works best for me is to imagine that you're building a system for human trainees. If the requirement is that staff with limited training should be able to use the software and make zero mistakes, then we would naturally converge on a system that we can hand to an agent to operate.
+## Option one: Just don't use agents.
 
-For example, imagine a hotel front-desk staff checking in a guest. We don't instruct the staff to write SQL to query the database in order to find the guest's booking. Instead, we provide staff with an interface to be able to easily check-in guests. They enter their names, available booking details, and the system automatically runs all the necessary checks and post-check-in procedures.
+Sometimes the tech industry is guilty of doing something just because everyone
+else is doing it, regardless of whether or not it's appropriate. For the past
+year, I've gotten the sense that a lot of people are trying to integrate
+agentic approaches into their products, when there's clearly no need to do so.
 
-The same approach works for non-biological agents. Instead of giving them low-level tools, give them tools like `check_in_guest` that accepts provided guest information. Make the tool validate the inputs, deterministically process the check-in, and return information that will be useful to the agent, like that the process succeeded, and perhaps reminders on what to do next.
+Don't get me wrong. Sometimes, agentic is the right choice. But just as often,
+it isn't.
 
-Every system will be different, but the idea is to design your tools in a way that minimizes agent decision making errors.
+Agentic architecture really shines when neither the problem nor the solution is
+clearly defined in advance.
 
-A system like this could potentially strike a good balance of being user friendly (the interface is natural language, perhaps even through voice), but also deterministic.
+Coding is a good example of this. There is no one-size-fits-all deterministic
+approach to writing software that writes software. Before LLMs, the best we
+could manage was autocomplete within IDEs.
+
+On the flip side though, agentic architecture is _terrible_ if you need a system
+that works the same way every time, like what most software actually needs to
+do. If that's your product, you're better off building with a traditional,
+non-agentic approach.
+
+_But I really want to build using agents!_ I hear you cry. In that case, the
+second approach might be more interesting.
+
+## Option two: Good AX (Agent Experience)
+
+The main idea is to be smart about what tools to give to your agent. Instead of
+low-level tools like those in the example above, give agents tools that move
+business logic out of the LLM's purview and into the tool layer.
+
+I think it helps if you frame the problem like you're building software that
+will be used by human operators. Going back to our booking system, if we want
+humans to be able to find and book rooms effectively, we need to design and
+build software with good UX.
+
+The same is true for agents. The key to having a successful agentic system is
+good agent experience, or AX.
+
+<figure>
+  <img
+    class="theme-diagram"
+    src="/assets/images/when-not-to-use-agents/agent-interface-flow.svg"
+    alt="Safer agentic booking flow: a user talks to an LLM, which calls purpose-built tools in an agent interface backed by the booking system core."
+    width="720"
+    height="180"
+    loading="lazy"
+  />
+</figure>
+
+Instead of telling the agent to coordinate every step manually, give it a
+`find_rooms` tool. The tool could accept the guest's information, dates, budget
+range, and other preferences. Then give it another tool called `create_booking`
+that accepts the guest's information, chosen room, and dates, then returns a
+payment link.
+
+Behind those tools, the booking system can make sure the offer hasn't
+expired, lock the room inventory, calculate the authoritative price and taxes,
+prevent duplicate bookings and charges, authorize the payment, save the
+reservation atomically, and queue the confirmation email only after the
+transaction commits. If any step fails, the system can roll back the operation
+or return a defined failure.
+
+Notice that this is pretty much what we've already been doing with traditional
+software, except now, our "user" is an AI agent.
+
+In this model, the agent's job becomes limited to understanding the customer's
+request, collecting information, asking for confirmation, and explaining the
+result. The decisions about transaction order and preserving the system's
+business rules stay deterministic behind the tool calls.
+
+If built well, I think a system like this could potentially be more
+user-friendly than the UIs we have today. I know I'm not alone when I say I've
+spent hours upon hours scouring Airbnb for the perfect place to stay.
+
+## Know when to go agentic
+
+The bottom line is, agentic isn't a one-size-fits-all solution. In fact, it
+often isn't appropriate. And when you do decide to use it, don't trust that it
+will behave, but structure your approach to maximize the chances of it
+succeeding by designing good AX.
