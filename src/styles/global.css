@@ -48,8 +48,8 @@
   --muted-foreground: #6b6b73;
   --primary: #17171a;
   --primary-foreground: #ffffff;
-  --accent: #1a4fa0;
-  --accent-strong: #123a79;
+  --accent: #b35c00;
+  --accent-strong: #8f4100;
   --accent-foreground: #ffffff;
   --border: #e6e6e8;
   --border-strong: #d2d2d6;
@@ -102,8 +102,8 @@
   --muted-foreground: #a2a2aa;
   --primary: #f2f2f3;
   --primary-foreground: #101012;
-  --accent: #8ab4f8;
-  --accent-strong: #b3cffb;
+  --accent: #ff990a;
+  --accent-strong: #ffb340;
   --accent-foreground: #101012;
   --border: #2a2a2f;
   --border-strong: #45454c;
@@ -680,7 +680,7 @@
    */
   .prose {
     font-size: 1.0625rem;
-    line-height: 1.75;
+    line-height: 1.6;
     word-break: break-word;
   }
 
