@@ -1,0 +1,319 @@
+---
+export interface FlowNode {
+  label: string;
+  description: string;
+  accent?: boolean;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  nodes: FlowNode[];
+  warningEdge?: number;
+  warningLabel?: string;
+}
+
+const {
+  id,
+  title,
+  description,
+  nodes,
+  warningEdge,
+  warningLabel = "Low-level calls",
+} = Astro.props;
+
+if (nodes.length < 2 || nodes.length > 4) {
+  throw new Error(`Flow diagram "${id}" must contain between two and four nodes.`);
+}
+
+const desktopWidth = 720;
+const desktopHeight = 180;
+const desktopMargin = 20;
+const desktopNodeWidth = nodes.length === 4 ? 150 : 160;
+const desktopNodeHeight = 84;
+const desktopNodeY = 48;
+const desktopGap =
+  (desktopWidth - desktopMargin * 2 - desktopNodeWidth * nodes.length) /
+  (nodes.length - 1);
+const desktopNodes = nodes.map((node, index) => ({
+  ...node,
+  x: desktopMargin + index * (desktopNodeWidth + desktopGap),
+  y: desktopNodeY,
+}));
+const desktopEdges = desktopNodes.slice(0, -1).map((node, index) => ({
+  x1: node.x + desktopNodeWidth,
+  x2: desktopNodes[index + 1].x - 9,
+  y: desktopNodeY + desktopNodeHeight / 2,
+  warning: warningEdge === index,
+}));
+
+const mobileWidth = 320;
+const mobileMargin = 20;
+const mobileNodeWidth = 280;
+const mobileNodeHeight = 72;
+const mobileGap = 52;
+const mobileHeight =
+  mobileMargin * 2 +
+  mobileNodeHeight * nodes.length +
+  mobileGap * (nodes.length - 1);
+const mobileNodes = nodes.map((node, index) => ({
+  ...node,
+  x: mobileMargin,
+  y: mobileMargin + index * (mobileNodeHeight + mobileGap),
+}));
+const mobileEdges = mobileNodes.slice(0, -1).map((node, index) => ({
+  x: mobileWidth / 2,
+  y1: node.y + mobileNodeHeight,
+  y2: mobileNodes[index + 1].y - 9,
+  warning: warningEdge === index,
+}));
+
+const fontSize = (label: string) => (label.length > 13 ? 16 : 18);
+---
+
+<figure class="flow-diagram">
+  <svg
+    class="flow-diagram__desktop"
+    viewBox={`0 0 ${desktopWidth} ${desktopHeight}`}
+    role="img"
+    aria-labelledby={`${id}-desktop-title ${id}-desktop-description`}
+  >
+    <title id={`${id}-desktop-title`}>{title}</title>
+    <desc id={`${id}-desktop-description`}>{description}</desc>
+    <defs>
+      <marker
+        id={`${id}-desktop-arrow`}
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" class="flow-diagram__arrowhead" />
+      </marker>
+      <marker
+        id={`${id}-desktop-warning-arrow`}
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" class="flow-diagram__warning-arrowhead" />
+      </marker>
+    </defs>
+
+    {desktopEdges.map((edge) => (
+      <path
+        d={`M ${edge.x1} ${edge.y} H ${edge.x2}`}
+        class:list={["flow-diagram__edge", { "flow-diagram__edge--warning": edge.warning }]}
+        marker-end={`url(#${id}-desktop-${edge.warning ? "warning-" : ""}arrow)`}
+      />
+    ))}
+
+    {warningEdge !== undefined && desktopEdges[warningEdge] && (
+      <text
+        x={(desktopEdges[warningEdge].x1 + desktopEdges[warningEdge].x2) / 2}
+        y="34"
+        class="flow-diagram__warning-label"
+      >
+        {warningLabel}
+      </text>
+    )}
+
+    {desktopNodes.map((node) => (
+      <g>
+        <rect
+          x={node.x}
+          y={node.y}
+          width={desktopNodeWidth}
+          height={desktopNodeHeight}
+          rx="8"
+          class:list={["flow-diagram__node", { "flow-diagram__node--accent": node.accent }]}
+        />
+        <text
+          x={node.x + desktopNodeWidth / 2}
+          y={node.y + 35}
+          font-size={fontSize(node.label)}
+          class="flow-diagram__label"
+        >
+          {node.label}
+        </text>
+        <text
+          x={node.x + desktopNodeWidth / 2}
+          y={node.y + 59}
+          class="flow-diagram__description"
+        >
+          {node.description}
+        </text>
+      </g>
+    ))}
+  </svg>
+
+  <svg
+    class="flow-diagram__mobile"
+    viewBox={`0 0 ${mobileWidth} ${mobileHeight}`}
+    role="img"
+    aria-labelledby={`${id}-mobile-title ${id}-mobile-description`}
+  >
+    <title id={`${id}-mobile-title`}>{title}</title>
+    <desc id={`${id}-mobile-description`}>{description}</desc>
+    <defs>
+      <marker
+        id={`${id}-mobile-arrow`}
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" class="flow-diagram__arrowhead" />
+      </marker>
+      <marker
+        id={`${id}-mobile-warning-arrow`}
+        viewBox="0 0 10 10"
+        refX="9"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" class="flow-diagram__warning-arrowhead" />
+      </marker>
+    </defs>
+
+    {mobileEdges.map((edge) => (
+      <path
+        d={`M ${edge.x} ${edge.y1} V ${edge.y2}`}
+        class:list={["flow-diagram__edge", { "flow-diagram__edge--warning": edge.warning }]}
+        marker-end={`url(#${id}-mobile-${edge.warning ? "warning-" : ""}arrow)`}
+      />
+    ))}
+
+    {warningEdge !== undefined && mobileEdges[warningEdge] && (
+      <text
+        x={mobileEdges[warningEdge].x + 16}
+        y={(mobileEdges[warningEdge].y1 + mobileEdges[warningEdge].y2) / 2 + 4}
+        text-anchor="start"
+        class="flow-diagram__warning-label flow-diagram__warning-label--mobile"
+      >
+        {warningLabel}
+      </text>
+    )}
+
+    {mobileNodes.map((node) => (
+      <g>
+        <rect
+          x={node.x}
+          y={node.y}
+          width={mobileNodeWidth}
+          height={mobileNodeHeight}
+          rx="8"
+          class:list={["flow-diagram__node", { "flow-diagram__node--accent": node.accent }]}
+        />
+        <text
+          x={mobileWidth / 2}
+          y={node.y + 31}
+          font-size={fontSize(node.label)}
+          class="flow-diagram__label"
+        >
+          {node.label}
+        </text>
+        <text x={mobileWidth / 2} y={node.y + 54} class="flow-diagram__description">
+          {node.description}
+        </text>
+      </g>
+    ))}
+  </svg>
+</figure>
+
+<style>
+  .flow-diagram {
+    margin: 2rem 0;
+    font-family: var(--font-sans);
+  }
+
+  .flow-diagram svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .flow-diagram__mobile {
+    display: none;
+  }
+
+  .flow-diagram__node {
+    fill: var(--muted);
+    stroke: var(--border-strong);
+  }
+
+  .flow-diagram__node--accent {
+    fill: var(--card);
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .flow-diagram__label,
+  .flow-diagram__description,
+  .flow-diagram__warning-label {
+    text-anchor: middle;
+  }
+
+  .flow-diagram__label {
+    fill: var(--foreground);
+    font-weight: 600;
+  }
+
+  .flow-diagram__description {
+    fill: var(--muted-foreground);
+    font-size: 14px;
+  }
+
+  .flow-diagram__edge {
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .flow-diagram__arrowhead {
+    fill: var(--muted-foreground);
+  }
+
+  .flow-diagram__edge--warning {
+    stroke: var(--warning);
+    stroke-dasharray: 5 5;
+  }
+
+  .flow-diagram__warning-arrowhead {
+    fill: var(--warning);
+  }
+
+  .flow-diagram__warning-label {
+    fill: var(--warning);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .flow-diagram__warning-label--mobile {
+    text-anchor: start;
+  }
+
+  @media (max-width: 640px) {
+    .flow-diagram__desktop {
+      display: none;
+    }
+
+    .flow-diagram__mobile {
+      display: block;
+      max-width: 20rem;
+      margin-inline: auto;
+    }
+  }
+</style>

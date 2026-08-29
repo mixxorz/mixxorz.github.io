@@ -793,10 +793,6 @@
     margin: 2rem 0;
   }
 
-  :root[data-theme="dark"] .prose .theme-diagram {
-    filter: invert(1) hue-rotate(180deg);
-  }
-
   .prose figcaption {
     margin-top: 0.6rem;
     font-size: 0.8125rem;

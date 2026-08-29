@@ -2,8 +2,10 @@
 title: "When not to use agents"
 date: 2026-08-28T10:46:00+09:00
 excerpt: Agentic systems do not replace deterministic software.
-draft: true
+draft: false
 ---
+
+import FlowDiagram from "@/components/FlowDiagram.astro";
 
 It's August 2026, and I think a lot of software engineers still get something
 deeply wrong with agentic systems: they should not replace traditional
@@ -18,15 +20,16 @@ all the basics: database models, views, forms, and UI. The works.
 
 At its most basic, the interaction model would kind of look like this.
 
-<figure>
-  <img
-    class="theme-diagram"
-    src="/assets/images/when-not-to-use-agents/traditional-booking-flow.svg"
-    alt="Traditional booking flow: a user interacts with a user interface, which calls the booking system core."
-    width="720"
-    height="180"
-  />
-</figure>
+<FlowDiagram
+  id="traditional-booking"
+  title="Traditional booking flow"
+  description="A user interacts with a user interface, which calls the deterministic booking core."
+  nodes={[
+    { label: "User", description: "Customer" },
+    { label: "User interface", description: "Forms and flows", accent: true },
+    { label: "Core", description: "Business rules" },
+  ]}
+/>
 
 In the agentic world we now live in, I've seen software engineers propose a
 different architecture. They get a model and give it low-level tools like
@@ -34,16 +37,18 @@ different architecture. They get a model and give it low-level tools like
 along with a system prompt explaining how the booking system should work. Then
 they expose a chat interface to the customer.
 
-<figure>
-  <img
-    class="theme-diagram"
-    src="/assets/images/when-not-to-use-agents/llm-low-level-tools-flow.svg"
-    alt="Risky agentic booking flow: a user talks to an LLM, which directly orchestrates low-level tools in the booking system core."
-    width="720"
-    height="180"
-    loading="lazy"
-  />
-</figure>
+<FlowDiagram
+  id="llm-low-level-tools"
+  title="LLM directly orchestrating low-level tools"
+  description="A user talks to an LLM, which makes low-level calls directly into the booking core."
+  nodes={[
+    { label: "User", description: "Customer" },
+    { label: "LLM", description: "Orchestrates steps", accent: true },
+    { label: "Core", description: "Raw actions" },
+  ]}
+  warningEdge={1}
+  warningLabel="Low-level calls"
+/>
 
 In the chat, a customer might say, “Find me a room for two nights under 300 USD.”
 The LLM will then try its best to figure out the right course of action
@@ -100,16 +105,17 @@ build software with good UX.
 The same is true for agents. The key to having a successful agentic system is
 good agent experience, or AX.
 
-<figure>
-  <img
-    class="theme-diagram"
-    src="/assets/images/when-not-to-use-agents/agent-interface-flow.svg"
-    alt="Safer agentic booking flow: a user talks to an LLM, which calls purpose-built tools in an agent interface backed by the booking system core."
-    width="720"
-    height="180"
-    loading="lazy"
-  />
-</figure>
+<FlowDiagram
+  id="agent-interface"
+  title="Booking flow with an agent interface"
+  description="A user talks to an LLM, which uses a purpose-built agent interface backed by the deterministic booking core."
+  nodes={[
+    { label: "User", description: "Customer" },
+    { label: "LLM", description: "Understands intent" },
+    { label: "Agent interface", description: "Purpose-built tools", accent: true },
+    { label: "Core", description: "Business rules" },
+  ]}
+/>
 
 Instead of telling the agent to coordinate every step manually, give it a
 `find_rooms` tool. The tool could accept the guest's information, dates, budget

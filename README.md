@@ -21,7 +21,7 @@ npm run preview
 
 ## Content
 
-Posts live in `src/content/posts/<year>/<slug>.md`. That path determines the published URL: for example, `src/content/posts/2018/example.md` is generated at `/2018/example/`.
+Posts live in `src/content/posts/<year>/<slug>.md` or `.mdx`. That path determines the published URL: for example, `src/content/posts/2018/example.md` is generated at `/2018/example/`.
 
 Static files live in `public/`. Existing article images and demos remain under `public/assets/` so their historical URLs continue to work.
 
