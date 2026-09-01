@@ -3,6 +3,8 @@ import { siteConfig } from "@/config/site";
 
 export type Post = CollectionEntry<"posts">;
 
+export const postsPerPage = 10;
+
 export const postHref = (post: Post) => `/${post.id}/`;
 
 export const byNewest = (a: Post, b: Post) => b.data.date.getTime() - a.data.date.getTime();

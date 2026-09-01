@@ -6,11 +6,11 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { siteConfig } from "@/config/site";
-import { visiblePosts, type Post } from "@/lib/posts";
+import { postHref, postsPerPage, visiblePosts, type Post } from "@/lib/posts";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const posts = visiblePosts(await getCollection("posts"));
-  return paginate(posts, { pageSize: 10 });
+  return paginate(posts, { pageSize: postsPerPage });
 }) satisfies GetStaticPaths;
 
 interface Props {
@@ -23,9 +23,37 @@ const description = `Every post published on ${siteConfig.name}.`;
 const withTrailingSlash = (url: string | undefined) => (url && !url.endsWith("/") ? `${url}/` : url);
 const prevUrl = withTrailingSlash(page.url.prev);
 const nextUrl = withTrailingSlash(page.url.next);
+const archiveUrl = new URL(Astro.url.pathname, siteConfig.siteUrl).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: archiveUrl,
+  isPartOf: {
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.siteUrl,
+  },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: page.data.map((post, index) => ({
+      "@type": "ListItem",
+      position: (page.currentPage - 1) * postsPerPage + index + 1,
+      name: post.data.title,
+      url: new URL(postHref(post), siteConfig.siteUrl).toString(),
+    })),
+  },
+};
 ---
 
-<BaseLayout title={title} description={description} prevUrl={prevUrl} nextUrl={nextUrl}>
+<BaseLayout
+  title={title}
+  description={description}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+  {structuredData}
+>
   <SiteHeader />
   <main id="content" class="outer">
     <div class="canvas">

@@ -4,7 +4,14 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Page not found" description="The page you requested could not be found." noindex>
+<BaseLayout
+  title="Page not found"
+  description="The page you requested could not be found."
+  noindex
+  includeCanonical={false}
+  includeSocialMetadata={false}
+  structuredData={null}
+>
   <SiteHeader />
   <main id="content" class="outer grid min-h-[55vh] place-items-center py-16 text-center">
     <div>

@@ -3,9 +3,29 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { siteConfig } from "@/config/site";
+
+const description = `About ${siteConfig.authorName}.`;
+const aboutUrl = new URL("/about/", siteConfig.siteUrl).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  name: `About ${siteConfig.authorName}`,
+  description,
+  url: aboutUrl,
+  mainEntity: {
+    "@type": "Person",
+    name: siteConfig.authorName,
+    description: siteConfig.bio,
+    url: aboutUrl,
+    image: new URL("/assets/images/profile-github.jpg", siteConfig.siteUrl).toString(),
+    sameAs: siteConfig.socials
+      .map((social) => social.href)
+      .filter((href) => href.startsWith("https://")),
+  },
+};
 ---
 
-<BaseLayout title="About" description={`About ${siteConfig.authorName}.`}>
+<BaseLayout title="About" {description} {structuredData}>
   <SiteHeader />
   <main id="content" class="outer">
     <div class="canvas">

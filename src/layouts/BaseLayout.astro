@@ -8,9 +8,11 @@ interface Props {
   image?: string;
   type?: "website" | "article";
   noindex?: boolean;
+  includeCanonical?: boolean;
+  includeSocialMetadata?: boolean;
   prevUrl?: string;
   nextUrl?: string;
-  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  structuredData?: Record<string, unknown> | Record<string, unknown>[] | null;
 }
 
 const {
@@ -19,6 +21,8 @@ const {
   image = siteConfig.socialImage,
   type = "website",
   noindex = false,
+  includeCanonical = true,
+  includeSocialMetadata = true,
   prevUrl,
   nextUrl,
   structuredData,
@@ -38,7 +42,7 @@ const defaultStructuredData = {
     name: siteConfig.authorName,
   },
 };
-const schema = structuredData ?? defaultStructuredData;
+const schema = structuredData === undefined ? defaultStructuredData : structuredData;
 ---
 
 <!doctype html>
@@ -50,23 +54,27 @@ const schema = structuredData ?? defaultStructuredData;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={canonical} />
+    {includeCanonical && <link rel="canonical" href={canonical} />}
     {prevUrl && <link rel="prev" href={new URL(prevUrl, siteConfig.siteUrl).toString()} />}
     {nextUrl && <link rel="next" href={new URL(nextUrl, siteConfig.siteUrl).toString()} />}
     <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} RSS`} href={new URL("/rss.xml", siteConfig.siteUrl).toString()} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta property="og:locale" content={siteConfig.locale} />
-    <meta property="og:type" content={type} />
-    <meta property="og:site_name" content={siteConfig.name} />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={absoluteImage} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={absoluteImage} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    {includeSocialMetadata && (
+      <>
+        <meta property="og:locale" content={siteConfig.locale} />
+        <meta property="og:type" content={type} />
+        <meta property="og:site_name" content={siteConfig.name} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={absoluteImage} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={absoluteImage} />
+      </>
+    )}
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
     <script is:inline>
       /*
        * Runs before first paint so the stored reading mode is applied without a
